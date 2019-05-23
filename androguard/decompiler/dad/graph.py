@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import logging
+import os
 from collections import defaultdict
 
 from androguard.decompiler.dad.basic_blocks import (build_node_from_block,
@@ -22,6 +23,8 @@ from androguard.decompiler.dad.basic_blocks import (build_node_from_block,
 from androguard.decompiler.dad.instruction import Variable
 
 logger = logging.getLogger('dad.graph')
+if os.environ.get("ANDROGUARD_LOGS", "1") == "0":
+    logger.setLevel(logging.CRITICAL)
 
 
 # TODO Could use networkx here, as it has plenty of tools already, no need to reengineer the wheel

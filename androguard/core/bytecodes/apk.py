@@ -24,7 +24,8 @@ NS_ANDROID_URI = 'http://schemas.android.com/apk/res/android'
 NS_ANDROID = '{{{}}}'.format(NS_ANDROID_URI)  # Namespace as used by etree
 
 log = logging.getLogger("androguard.apk")
-
+if os.environ.get("ANDROGUARD_LOGS", "1") == "0":
+    log.setLevel(logging.CRITICAL)
 
 def parse_lxml_dom(tree):
     handler = SAX2DOM()
@@ -61,7 +62,7 @@ def _dump_additional_attributes(additional_attributes):
     attr_id, = unpack('<I', attributes_raw.read(4))
     if attr_id != APK._APK_SIG_ATTR_V2_STRIPPING_PROTECTION:
         return attributes_hex
-        
+
     scheme_id, = unpack('<I', attributes_raw.read(4))
 
     return "stripping protection set, scheme %d" % scheme_id
@@ -81,7 +82,7 @@ def _dump_digests_or_signatures(digests_or_sigs):
 
 
 class APKV2SignedData:
-    """ 
+    """
     This class holds all data associated with an APK V3 SigningBlock signed data.
     source : https://source.android.com/security/apksigning/v2.html
     """
@@ -117,7 +118,7 @@ class APKV2SignedData:
 
 
 class APKV3SignedData(APKV2SignedData):
-    """ 
+    """
     This class holds all data associated with an APK V3 SigningBlock signed data.
     source : https://source.android.com/security/apksigning/v3.html
     """
@@ -126,7 +127,7 @@ class APKV3SignedData(APKV2SignedData):
         super().__init__()
         self.minSDK = None
         self.maxSDK = None
-    
+
     def __str__(self):
 
         base_str = super().__str__()
@@ -139,12 +140,12 @@ class APKV3SignedData(APKV2SignedData):
         return "\n".join([
             'signer minSDK : {:d}'.format(self.minSDK),
             'signer maxSDK : {:s}'.format(max_sdk_str),
-            base_str    
+            base_str
         ])
 
 
 class APKV2Signer:
-    """ 
+    """
     This class holds all data associated with an APK V2 SigningBlock signer.
     source : https://source.android.com/security/apksigning/v2.html
     """
@@ -164,7 +165,7 @@ class APKV2Signer:
 
 
 class APKV3Signer(APKV2Signer):
-    """ 
+    """
     This class holds all data associated with an APK V3 SigningBlock signer.
     source : https://source.android.com/security/apksigning/v3.html
     """
@@ -175,7 +176,7 @@ class APKV3Signer(APKV2Signer):
         self.maxSDK = None
 
     def __str__(self):
-        
+
         base_str = super().__str__()
 
         # maxSDK is set to a negative value if there is no upper bound on the sdk targeted
@@ -186,7 +187,7 @@ class APKV3Signer(APKV2Signer):
         return "\n".join([
             'signer minSDK : {:d}'.format(self.minSDK),
             'signer maxSDK : {:s}'.format(max_sdk_str),
-            base_str    
+            base_str
         ])
 
 
@@ -1560,7 +1561,7 @@ class APK:
 
         if not len(digest_bytes):
             return []
-        
+
         digests = []
         block = io.BytesIO(digest_bytes)
 
@@ -1656,7 +1657,7 @@ class APK:
         if self._APK_SIG_KEY_V3_SIGNATURE in self._v2_blocks:
             self._is_signed_v3 = True
 
-    
+
     def parse_v3_signing_block(self):
         """
         Parse the V2 signing block and extract all features
@@ -1678,7 +1679,7 @@ class APK:
         #    * signed data:
         #        * digests:
         #            * signature algorithm ID (uint32)
-        #            * digest (length-prefixed) 
+        #            * digest (length-prefixed)
         #        * certificates
         #        * minSDK
         #        * maxSDK
@@ -1777,7 +1778,7 @@ class APK:
         #    * signed data:
         #        * digests:
         #            * signature algorithm ID (uint32)
-        #            * digest (length-prefixed) 
+        #            * digest (length-prefixed)
         #        * certificates
         #        * additional attributes
         #    * signatures

@@ -12,9 +12,12 @@ from lxml import etree
 import logging
 import re
 import sys
+import os
 import binascii
 
 log = logging.getLogger("androguard.axml")
+if os.environ.get("ANDROGUARD_LOGS", "1") == "0":
+    log.setLevel(logging.CRITICAL)
 
 
 # Constants for ARSC Files

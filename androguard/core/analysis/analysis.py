@@ -1,4 +1,5 @@
 import re
+import os
 import collections
 import time
 import warnings
@@ -10,6 +11,8 @@ import networkx as nx
 from enum import IntEnum
 
 log = logging.getLogger("androguard.analysis")
+if os.environ.get("ANDROGUARD_LOGS", "1") == "0":
+    log.setLevel(logging.CRITICAL)
 
 BasicOPCODES = []
 for i in dvm.BRANCH_DVM_OPCODES:

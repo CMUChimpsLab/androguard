@@ -8,6 +8,8 @@ from androguard.core.api_specific_resources import load_permission_mappings, loa
 ANDROGUARD_VERSION = __version__
 
 log = logging.getLogger("androguard.default")
+if os.environ.get("ANDROGUARD_LOGS", "1") == "0":
+    log.setLevel(logging.CRITICAL)
 
 
 class InvalidResourceError(Exception):

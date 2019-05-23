@@ -8,6 +8,7 @@ docs/build
 
 *.o
 *.so
+*.swp
 # Binary Files
 elsim/elsim/elsign/formula/test
 elsim/elsim/similarity/libsimilarity/bz2/test_bz2
